@@ -1,0 +1,40 @@
+import express from 'express';
+import fs from 'fs';
+import path from 'path';
+
+const router = express.Router();
+const productosFilePath = path.join(__dirname, '../data/productos.json');
+
+// Leer datos del archivo JSON
+const readDataFromFile = (filePath) => {
+  const data = fs.readFileSync(filePath, 'utf8');
+  return JSON.parse(data);
+};
+
+// Ruta GET para obtener todos los productos
+router.get('/', (req, res) => {
+  try {
+    const productos = readDataFromFile(productosFilePath);
+    res.json(productos);
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+// Ruta POST para agregar un nuevo producto
+router.post('/', (req, res) => {
+  try {
+    const productos = readDataFromFile(productosFilePath);
+    const newProduct = req.body;
+    productos.push(newProduct);
+    fs.writeFileSync(productosFilePath, JSON.stringify(productos, null, 2));
+    res.status(201).json(newProduct);
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+export default router;
+
+
+  

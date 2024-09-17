@@ -1,0 +1,40 @@
+import express from 'express';
+import fs from 'fs';
+import path from 'path';
+
+const router = express.Router();
+const ventasFilePath = path.join(__dirname, '../data/ventas.json');
+
+// Leer datos del archivo JSON
+const readDataFromFile = (filePath) => {
+  const data = fs.readFileSync(filePath, 'utf8');
+  return JSON.parse(data);
+};
+
+// Ruta GET para obtener todas las ventas
+router.get('/', (req, res) => {
+  try {
+    const ventas = readDataFromFile(ventasFilePath);
+    res.json(ventas);
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+// Ruta POST para agregar una nueva venta
+router.post('/', (req, res) => {
+  try {
+    const ventas = readDataFromFile(ventasFilePath);
+    const newSale = req.body;
+    ventas.push(newSale);
+    fs.writeFileSync(ventasFilePath, JSON.stringify(ventas, null, 2));
+    res.status(201).json(newSale);
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+export default router;
+
+
+  
