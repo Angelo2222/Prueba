@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bar - Productos</title>
+  <link rel="stylesheet" href="../src/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Bar - Productos</h1>
+    <nav>
+      <a href="index.html">Productos</a>
+      <a href="carrito.html">Carrito</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="filters">
+      <label for="category-filter">Filtrar por categoría:</label>
+      <select id="category-filter">
+        <option value="">Todos</option>
+        <option value="Electrónica">Electrónica</option>
+        <option value="Computadoras">Computadoras</option>
+        <!-- Agrega más categorías según tus productos -->
+      </select>
+    </section>
+
+    <section id="product-list">
+      <!-- Los productos se cargarán aquí dinámicamente -->
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Bar. Todos los derechos reservados.</p>
+  </footer>
+
+  <script src="/src/main.js"></script>
+</body>
+</html>

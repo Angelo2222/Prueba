@@ -1,0 +1,61 @@
+import express from 'express';
+import fs from 'fs';
+import path from 'path';
+
+const router = express.Router();
+const productosFilePath = path.join(__dirname, '../data/productos.json');
+
+// Leer datos del archivo JSON
+const readDataFromFile = (filePath) => {
+  const data = fs.readFileSync(filePath, 'utf8');
+  return JSON.parse(data);
+};
+
+// Ruta GET para obtener todos los productos o filtrar por categoría
+router.get('/', (req, res) => {
+  try {
+    const categoria = req.query.categoria;
+    let productos = readDataFromFile(productosFilePath);
+    if (categoria) {
+      productos = productos.filter(p => p.categoria.toLowerCase() === categoria.toLowerCase());
+    }
+    res.json(productos);
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+// Ruta GET para obtener un producto por ID
+router.get('/:id', (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const productos = readDataFromFile(productosFilePath);
+    const producto = productos.find(p => p.id === id);
+    if (!producto) {
+      return res.status(404).json({ message: 'Producto no encontrado' });
+    }
+    res.json(producto);
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+// Ruta POST para agregar un nuevo producto
+router.post('/', (req, res) => {
+  try {
+    const productos = readDataFromFile(productosFilePath);
+    const newProduct = req.body;
+    newProduct.id = productos.length ? productos[productos.length - 1].id + 1 : 1;
+    productos.push(newProduct);
+    fs.writeFileSync(productosFilePath, JSON.stringify(productos, null, 2));
+    res.status(201).json(newProduct);
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+export default router;
+
+
+
+  
